@@ -29,6 +29,7 @@ my_dict['dict'].pop('middle_name')
 my_dict['set'].add('Japan')
 my_dict['set'].pop()  # удаляю случайный элемент из множества
 random_list = list(set([1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]))  # удаляю дубликаты из списка с помощью множества
+my_dict['set'].remove('USA')
 
 # Итог
 
