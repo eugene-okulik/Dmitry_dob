@@ -8,4 +8,4 @@ print(
 
 # либо
 
-print(f'Students {', '.join(students)} study these subjects: {', '.join(subjects)}')
+print(f"Students {', '.join(students)} study these subjects: {', '.join(subjects)}")
