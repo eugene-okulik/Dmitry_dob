@@ -8,7 +8,8 @@ temperatures = [
 new_list = list(filter(lambda day: day > 28, temperatures))
 print(new_list)
 
-# вторая часть задания 
+# вторая часть задания
+
 
 def print_day_stat_temperature(arg):
     print(f'Самая высокая температура: {max(arg)}')
