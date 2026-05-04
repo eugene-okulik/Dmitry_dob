@@ -13,9 +13,7 @@ def calc_operation(func):
             operation = "-"
         elif first < second:
             operation = "/"
-        result = func(first, second, operation)
-        if result is not None:
-            print(result)
+        return func(first, second, operation)
 
     return wrapper
 
@@ -39,7 +37,7 @@ def calc_second(first, second, operation):
         )
 
 
-calc_second(first, second, "+")
+print(calc_second(first, second, "+"))
 
 
 @calc_operation
