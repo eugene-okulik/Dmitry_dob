@@ -16,10 +16,11 @@ class Book:
 first = Book("Идиот", "Достоевский", 500, 9781234567897)
 second = Book("Мастер и Маргарита", "Булгаков", 480, 9780451525022)
 third = Book("Гарри Поттер и философский камень", "Роулинг", 352, 9780747532743)
-fourth = Book("1984", "Оруэлл", 328, 9780451524935, True)
+fourth = Book("1984", "Оруэлл", 328, 9780451524935)
 fifth = Book("Война и мир", "Толстой", 1225, 9780192833983)
 books = [first, second, third, fourth, fifth]
 
+fourth.is_reserved = True
 
 for book in books:
     text = (
@@ -48,14 +49,12 @@ class SchoolBook(Book):
         self.is_task = is_task
 
 
-matan = SchoolBook(
-    "Алгебра", "Иванов", 97812342567897, 200, "Математика", 9, True, True
-)
-fizika = SchoolBook("Физика", "Петров", 250, 97812334567897, "Физика", 8, False, False)
-geometry = SchoolBook(
-    "Геометрия", "Иванов", 97812234567897, 220, "Математика", 9, True, False
-)
+matan = SchoolBook("Алгебра", "Иванов", 200, 97812342567897, "Математика", 9, True)
+fizika = SchoolBook("Физика", "Петров", 250, 97812334567897, "Физика", 8, False)
+geometry = SchoolBook("Геометрия", "Иванов", 220, 9781223456789, "Математика", 9, True)
 items_books = [matan, fizika, geometry]
+
+fizika.is_reserved = True
 
 for book in items_books:
     text = (
