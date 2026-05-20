@@ -30,7 +30,7 @@ class Chamomile(Flower):
         super().__init__("Ромашка", color, stem_length, price, freshness, life_time)
 
 
-rose = Rose("Красный", 50, 300, 8, 7)
+rose = Rose("Красный", 50, 313, 8, 7)
 tulip = Tulip("Желтый", 40, 150, 8, 5)
 chamomile = Chamomile("Белый", 30, 400, 8, 5)
 
@@ -43,21 +43,22 @@ class Bouquet:
     #  Высчитываем общуюю стоимость букета
     def get_total_price(self):
 
-        price_bouquet = 0
-        for flower in self.flowers:
-            price_bouquet += flower.price
-        return price_bouquet
+        #  price_bouquet = 0
+        #  for flower in self.flowers:
+        #      price_bouquet += flower.price
+        return sum(list(flower.price for flower in self.flowers))
 
     #  Высчитываем среднее время жизни букета
     def get_avg_life_time(self):
 
-        # counter_flower = 0
-        full_time = 0
-        for flower in self.flowers:
-            full_time += flower.life_time
-            # counter_flower += 1
+        #  counter_flower = 0
+        #  full_time = 0
+        #  for flower in self.flowers:
+        #      full_time += flower.life_time
+        #  counter_flower += 1
 
-        return round(full_time / len(self.flowers), 1)
+        #  return round(full_time / len(self.flowers), 1)
+        return round(sum(list(flower.life_time for flower in self.flowers)) / len(self.flowers), 1)
 
     #  Сортировка по свежести
     def sort_by_freshness(self):
@@ -94,4 +95,4 @@ print(bouquet1.sort_by_freshness())
 print(bouquet1.sort_by_color())
 print(bouquet1.sort_by_stem_length())
 print(bouquet1.sort_by_price())
-print(bouquet1.get_flower_price(3))
+print(bouquet1.get_flower_life_time(6))
