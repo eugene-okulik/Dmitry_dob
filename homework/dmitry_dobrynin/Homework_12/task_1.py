@@ -1,11 +1,3 @@
-# Создать классы цветов: общий класс для всех цветов и классы для нескольких видов.
-# Создать экземпляры (объекты) цветов разных видов. Собрать букет (букет - еще один класс) с определением его стоимости.
-# В букете цветы пусть хранятся в списке. Это будет список объектов.
-# Для букета создать метод, который определяет время его увядания по среднему времени жизни всех цветов в букете.
-# Позволить сортировку цветов в букете на основе различных параметров (свежесть/цвет/длина стебля/стоимость)(это тоже методы)
-# Реализовать поиск цветов в букете по каким-нибудь параметрам (например, по среднему времени жизни) (и это тоже метод).
-
-
 class Flower:
 
     def __init__(self, name, color, stem_length, price, freshness, life_time):
@@ -48,15 +40,15 @@ class Bouquet:
     def __init__(self, flowers):
         self.flowers = flowers
 
-    # Высчитываем общуюю стоимость букета 
+    #  Высчитываем общуюю стоимость букета
     def get_total_price(self):
 
         price_bouquet = 0
         for flower in self.flowers:
             price_bouquet += flower.price
         return price_bouquet
-    
-    # Высчитываем среднее время жизни букета 
+
+    #  Высчитываем среднее время жизни букета
     def get_avg_life_time(self):
 
         # counter_flower = 0
@@ -66,31 +58,33 @@ class Bouquet:
             # counter_flower += 1
 
         return round(full_time / len(self.flowers), 1)
-    
-    # Сортировка по свежести
+
+    #  Сортировка по свежести
     def sort_by_freshness(self):
 
         return sorted(self.flowers, key=lambda flower: flower.freshness)
-    
-    # Сортировка по цвету
+
+    #  Сортировка по цвету
     def sort_by_color(self):
 
         return sorted(self.flowers, key=lambda flower: flower.color)
-    
-    # Сортировка по длине стебля
+
+    #  Сортировка по длине стебля
     def sort_by_stem_length(self):
 
         return sorted(self.flowers, key=lambda flower: flower.stem_length)
-    
-    # Сортировка по цене
+
+    #  Сортировка по цене
     def sort_by_price(self):
 
         return sorted(self.flowers, key=lambda flower: flower.price)
-    
-    def get_flower_price(self, user_want_life_time):
 
-        return list(flower for flower in self.flowers if user_want_life_time <= flower.life_time)
-    
+    #  Поиск цветов в букете по времени жизни
+    def get_flower_life_time(self, user_want_life_time):
+
+        return list(
+            flower for flower in self.flowers if user_want_life_time <= flower.life_time
+        )
 
 
 bouquet1 = Bouquet([rose, tulip, chamomile])
