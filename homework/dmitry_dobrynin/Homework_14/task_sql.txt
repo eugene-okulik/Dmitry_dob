@@ -1,0 +1,169 @@
+-- "Создайте студента (student)"
+INSERT INTO students(name, second_name)
+VALUES ('Dmitry', 'Dobrynin');
+
+SELECT *
+FROM students s
+WHERE s.second_name = 'Dobrynin';  -- id 22_936
+
+
+-- "Создайте несколько книг (books) и укажите, что ваш созданный студент взял их"
+INSERT INTO books(title)
+VALUES ('Idiot. Dostoevsky');
+
+SELECT *
+FROM books b 
+WHERE b.title LIKE 'Idiot%';  -- id 5_980
+
+INSERT INTO books(title)
+VALUES ('Martin Eden. London');
+
+SELECT *
+FROM books b 
+WHERE b.title LIKE '%London';  -- id 5_981
+
+BEGIN TRANSACTION;
+
+UPDATE books b
+SET taken_by_student_id = 22936
+WHERE b.id = 5980;
+-- Еще отличие PostgreSQL от MySQL - RETURNING нельзя применять, чтобы сразу изменения проверить
+-- Поэтому приходится через select проверять 
+
+SELECT *
+FROM books b 
+WHERE b.id = 5980;
+
+UPDATE books b
+SET taken_by_student_id = 22936
+WHERE b.id = 5981;
+
+SELECT *
+FROM books b 
+WHERE b.id = 5981;
+
+COMMIT;
+
+
+-- "Создайте группу (group) и определите своего студента туда"
+INSERT INTO `groups`(title, start_date)
+VALUES ('Банда Мухоморов', now());
+
+SELECT *
+FROM `groups`
+WHERE title = 'Банда Мухоморов';  -- id 22_783
+
+BEGIN TRANSACTION;
+
+UPDATE students
+SET group_id = 22783
+WHERE id = 22936;
+
+SELECT *
+FROM students s
+WHERE s.id = 22936;
+
+COMMIT;
+
+
+-- "Создайте несколько учебных предметов (subjects)"
+INSERT INTO subjects(title)
+VALUES ('Python autotesting');
+
+SELECT *
+FROM subjects s 
+WHERE s.title = 'Python autotesting'
+ORDER BY s.id DESC
+LIMIT 1;  -- id 22_941
+
+INSERT INTO subjects(title)
+VALUES ('DevOps');
+
+SELECT *
+FROM subjects s 
+WHERE s.title = 'DevOps'
+ORDER BY s.id DESC
+LIMIT 1;  -- 22_942
+
+
+-- Создайте по два занятия для каждого предмета (lessons)
+INSERT INTO lessons(title, subject_id)
+VALUES ('lesson_1', 22941),
+	   ('lesson_2', 22941);
+
+SELECT *
+FROM lessons l 
+WHERE l.subject_id = 22941;  -- id 76_240, id 76_241
+
+INSERT INTO lessons(title, subject_id)
+VALUES ('lesson_1', 22942),
+	   ('lesson_2', 22942);
+
+SELECT *
+FROM lessons l 
+WHERE l.subject_id = 22942;  -- id 76_242, id 76_243
+
+
+-- "Поставьте своему студенту оценки (marks) для всех созданных вами занятий"
+INSERT INTO marks(value, lesson_id, student_id)
+VALUES (4, 76240, 22936),
+	   (5, 76241, 22936),
+	   (3, 76242, 22936),
+	   (5, 76243, 22936);
+
+SELECT *
+FROM subjects s
+JOIN lessons l on s.id = l.subject_id 
+JOIN marks m on l.id = m.lesson_id
+JOIN students s2 on m.student_id = s2.id
+WHERE s.id IN (22941, 22942);
+
+
+--  "Все оценки студента"
+SELECT m.value as 'Все оценки студента',
+       s.name as 'Имя',
+       s.second_name as 'Фамилия'
+FROM marks m 
+JOIN students s on s.id = m.student_id
+WHERE s.id = (SELECT s2.id
+              FROM students s2 
+              WHERE s2.name = 'Dmitry' 
+                    and s2.second_name = 'Dobrynin');
+
+
+-- Дополнительно посчитал средний балл
+SELECT AVG(m.value) as 'Средний балл',
+       s.name as 'Имя',
+       s.second_name as 'Фамилия'
+FROM marks m 
+JOIN students s on s.id = m.student_id
+WHERE s.id = (SELECT s2.id
+              FROM students s2 
+              WHERE s2.name = 'Dmitry' 
+                    and s2.second_name = 'Dobrynin')
+GROUP BY s.id;
+
+
+--  Все книги, которые находятся у студента
+SELECT b.title 
+FROM books b
+JOIN students s on s.id = b.taken_by_student_id
+WHERE s.id = (SELECT s2.id
+              FROM students s2 
+              WHERE s2.name = 'Dmitry' 
+                    and s2.second_name = 'Dobrynin');
+
+
+/* 
+Для вашего студента выведите всё, что о нем есть в базе: группа, книги, 
+оценки с названиями занятий и предметов (всё одним запросом с использованием Join)
+*/
+
+SELECT *
+FROM students s
+JOIN `groups` g on g.id = s.group_id 
+JOIN books b on b.taken_by_student_id = s.id
+JOIN marks m on m.student_id = s.id
+JOIN lessons l on l.id = m.lesson_id
+JOIN subjects s2 on s2.id = l.subject_id
+WHERE s.id = 22936;
