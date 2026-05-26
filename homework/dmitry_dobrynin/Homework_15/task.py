@@ -17,16 +17,16 @@ VALUES (%s, %s)
 """
 values = ("Илья", "Воеводин")
 cursor.execute(query, values)
-user_id = cursor.lastrowid  #  записываю id пользователя
+user_id = cursor.lastrowid  # записываю id пользователя
 
-#   "Создайте несколько книг (books) и укажите, что ваш созданный студент взял их"
+#  "Создайте несколько книг (books) и укажите, что ваш созданный студент взял их"
 query = """
 INSERT INTO books(title)
 VALUES (%s)
 """
 values = ("Братья Карамазовы. Достоевский",)
 cursor.execute(query, values)
-id_book_first = cursor.lastrowid  #  id книги Братья Карамазовы
+id_book_first = cursor.lastrowid  # id книги Братья Карамазовы
 
 query = """
 INSERT INTO books(title)
@@ -34,7 +34,7 @@ VALUES (%s)
 """
 values = ("Мастер и Маргарита. Булгаков",)
 cursor.execute(query, values)
-id_book_second = cursor.lastrowid  #  id книги Мастер и Маргарита
+id_book_second = cursor.lastrowid  # id книги Мастер и Маргарита
 
 db.commit()
 
@@ -63,7 +63,7 @@ VALUES (%s, now())
 """
 values = ("Группа 1",)
 cursor.execute(query, values)
-id_group = cursor.lastrowid  #  заисываю id группы
+id_group = cursor.lastrowid  # заисываю id группы
 
 db.commit()
 
@@ -85,7 +85,7 @@ VALUES (%s)
 """
 values = ("life",)
 cursor.execute(query, values)
-id_first_subjects = cursor.lastrowid  #  записываю id первого предмета
+id_first_subjects = cursor.lastrowid  # записываю id первого предмета
 
 query = """
 INSERT INTO subjects(title)
@@ -93,7 +93,7 @@ VALUES (%s)
 """
 values = ("informatics",)
 cursor.execute(query, values)
-id_second_subjects = cursor.lastrowid  #  записываю id второго предмета
+id_second_subjects = cursor.lastrowid  # записываю id второго предмета
 
 db.commit()
 
@@ -158,9 +158,9 @@ db.commit()
 query = """
 INSERT INTO marks(value, lesson_id, student_id)
 VALUES (%s, %s, %s),
-	   (%s, %s, %s),
-	   (%s, %s, %s),
-	   (%s, %s, %s);
+       (%s, %s, %s),
+       (%s, %s, %s),
+       (%s, %s, %s);
 """
 values = (
     4,
@@ -186,7 +186,7 @@ query = """
 SELECT m.value,
        s.name,
        s.second_name
-FROM marks m 
+FROM marks m
 JOIN students s on s.id = m.student_id
 WHERE s.id = %s
 """
@@ -204,7 +204,7 @@ for grade in result:
 #   Все книги, которые находятся у студента
 
 query = """
-SELECT b.title 
+SELECT b.title
 FROM books b
 JOIN students s on s.id = b.taken_by_student_id
 WHERE s.id = %s
@@ -227,7 +227,7 @@ SELECT s.id AS student_id, s.name, s.second_name,
        l.id AS lesson_id, l.title AS lesson_title,
        s2.id AS subject_id, s2.title AS subject_title
 FROM students s
-JOIN `groups` g on g.id = s.group_id 
+JOIN `groups` g on g.id = s.group_id
 JOIN books b on b.taken_by_student_id = s.id
 JOIN marks m on m.student_id = s.id
 JOIN lessons l on l.id = m.lesson_id
@@ -240,7 +240,7 @@ result = cursor.fetchall()
 for info in result:
     for keys, values in info.items():
         print(f"{keys}: {values}")
-    print(f"Cтрока завершена")
+    print("Cтрока завершена")
 
 cursor.close()
 db.close()
