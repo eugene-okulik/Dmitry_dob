@@ -19,39 +19,30 @@ values = ("Илья", "Воеводин")
 cursor.execute(query, values)
 user_id = cursor.lastrowid  # записываю id пользователя
 
-#  "Создайте несколько книг (books) и укажите, что ваш созданный студент взял их"
+#  "Создайте несколько книг (books) и укажите,
+#   что ваш созданный студент взял их"
 query = """
 INSERT INTO books(title)
 VALUES (%s)
 """
-values = ("Братья Карамазовы. Достоевский",)
-cursor.execute(query, values)
-id_book_first = cursor.lastrowid  # id книги Братья Карамазовы
-
-query = """
-INSERT INTO books(title)
-VALUES (%s)
-"""
-values = ("Мастер и Маргарита. Булгаков",)
-cursor.execute(query, values)
-id_book_second = cursor.lastrowid  # id книги Мастер и Маргарита
+values = [
+    ("Братья Карамазовы. Достоевский",),
+    ("Мастер и Маргарита. Булгаков",)
+]
+cursor.executemany(query, values)
 
 db.commit()
 
 query = """
 UPDATE books b
 SET taken_by_student_id = %s
-WHERE b.id = %s
+WHERE b.title IN (%s, %s)
 """
-values = (user_id, id_book_first)
-cursor.execute(query, values)
-
-query = """
-UPDATE books b
-SET taken_by_student_id = %s
-WHERE b.id = %s
-"""
-values = (user_id, id_book_second)
+values = (
+    user_id,
+    "Братья Карамазовы. Достоевский",
+    "Мастер и Маргарита. Булгаков"
+)
 cursor.execute(query, values)
 
 db.commit()
@@ -83,73 +74,27 @@ query = """
 INSERT INTO subjects(title)
 VALUES (%s)
 """
-values = ("life",)
-cursor.execute(query, values)
-id_first_subjects = cursor.lastrowid  # записываю id первого предмета
-
-query = """
-INSERT INTO subjects(title)
-VALUES (%s)
-"""
-values = ("informatics",)
-cursor.execute(query, values)
-id_second_subjects = cursor.lastrowid  # записываю id второго предмета
+subjects = [("life",), ("informatics",)]
+id_subjects = []
+for values in subjects:
+    cursor.execute(query, values)
+    id_subjects.append(cursor.lastrowid)
 
 db.commit()
 
 #  Создайте по два занятия для каждого предмета (lessons)
 
-# query = """
-# INSERT INTO lessons(title, subject_id)
-# VALUES (%s, %s),
-# 	   (%s, %s)
-# """
-# values = [('lesson_1', id_first_subjects),
-#           ('lesson_2', id_first_subjects)]
-# cursor.execute(query, values)
-
-# query = """
-# INSERT INTO lessons(title, subject_id)
-# VALUES (%s, %s),
-# 	   (%s, %s)
-# """
-# values = [('lesson_1', id_second_subjects),
-#           ('lesson_2', id_second_subjects)]
-# cursor.execute(query, values)
-
-#  К сожалению, сразу взять несколько id новых сущностей нельзя
-
 query = """
 INSERT INTO lessons(title, subject_id)
 VALUES (%s, %s)
 """
-values = ("lesson_1", id_first_subjects)
-cursor.execute(query, values)
-id_lesson_1_first_subjects = cursor.lastrowid  # id первого занятия первого предмета
-
-query = """
-INSERT INTO lessons(title, subject_id)
-VALUES (%s, %s)
-"""
-values = ("lesson_2", id_first_subjects)
-cursor.execute(query, values)
-id_lesson_2_first_subjects = cursor.lastrowid  # id второго занятия первого предмета
-
-query = """
-INSERT INTO lessons(title, subject_id)
-VALUES (%s, %s)
-"""
-values = ("lesson_1", id_second_subjects)
-cursor.execute(query, values)
-id_lesson_1_second_subjects = cursor.lastrowid  # id первого занятия второго предмета
-
-query = """
-INSERT INTO lessons(title, subject_id)
-VALUES (%s, %s)
-"""
-values = ("lesson_2", id_second_subjects)
-cursor.execute(query, values)
-id_lesson_2_second_subjects = cursor.lastrowid  # id второго занятия второго предмета
+lessons = ['lesson_1', 'lesson_2']
+id_lessons = list()
+for id in id_subjects:
+    for lesson in lessons:
+        values = (lesson, id)
+        cursor.execute(query, values)
+        id_lessons.append(cursor.lastrowid)
 
 db.commit()
 
@@ -157,27 +102,15 @@ db.commit()
 
 query = """
 INSERT INTO marks(value, lesson_id, student_id)
-VALUES (%s, %s, %s),
-       (%s, %s, %s),
-       (%s, %s, %s),
-       (%s, %s, %s);
+VALUES (%s, %s, %s)
 """
-values = (
-    4,
-    id_lesson_1_first_subjects,
-    user_id,
-    3,
-    id_lesson_2_first_subjects,
-    user_id,
-    5,
-    id_lesson_1_second_subjects,
-    user_id,
-    5,
-    id_lesson_2_second_subjects,
-    user_id,
-)
-cursor.execute(query, values)
-
+values = [
+    (4, id_lessons[0], user_id),
+    (3, id_lessons[1], user_id),
+    (5, id_lessons[2], user_id),
+    (5, id_lessons[3], user_id)
+]
+cursor.executemany(query, values)
 db.commit()
 
 #  "Все оценки студента"
@@ -217,7 +150,8 @@ for book in result:
 
 
 #   Для вашего студента выведите всё, что о нем есть в базе: группа, книги,
-#   оценки с названиями занятий и предметов (всё одним запросом с использованием Join)
+#   оценки с названиями занятий и предметов
+#   (всё одним запросом с использованием Join)
 
 query = """
 SELECT s.id AS student_id, s.name, s.second_name,
