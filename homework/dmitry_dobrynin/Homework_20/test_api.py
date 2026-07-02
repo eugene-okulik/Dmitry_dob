@@ -1,10 +1,8 @@
 import requests
 import pytest
 from random import choice
-from colorama import init, Fore
 from faker import Faker
 
-init(autoreset=True)
 fake = Faker()
 
 base_url = 'http://objapi.course.qa-practice.com/object'
@@ -12,46 +10,6 @@ error_status_code = 'status code incorrect'
 error_len_object = 'len incorrect'
 error_title = 'name object incorrect'
 error_body = 'response body incorrect'
-
-
-@pytest.fixture()
-def new_obj():  # setUp / tearDown
-    body = {
-        "name": "Test object",
-        "data": {
-            "color": "test_color",
-            "size": "test_size"
-        }
-    }
-    response = requests.post(
-        base_url,
-        json=body
-    )
-    id = response.json()['id']
-    yield str(id)
-    requests.delete(base_url + '/' + f"{id}")
-
-
-@pytest.fixture()
-def clear_obj():  # отдельная функция для удаления сущностей
-    ids = []
-    yield ids
-    for id in ids:
-        requests.delete(base_url + '/' + f"{id}")
-
-
-@pytest.fixture(scope="session")
-def log_all_test():
-    print(Fore.YELLOW + 'Start testing')
-    yield
-    print(Fore.YELLOW + '\nTesting completed')
-
-
-@pytest.fixture(autouse=True)
-def log_test():
-    print('before test')
-    yield
-    print('\nafter test')
 
 
 @pytest.mark.minor
@@ -70,14 +28,18 @@ def test_get_one_obj(new_obj):  # Получение одного объекта
 
 
 test_data = [
-    (fake.sentence(nb_words=3), fake.color(), choice(['small', 'medium', 'large']))
+    (
+        fake.sentence(nb_words=3),
+        fake.color(),
+        choice(['small', 'medium', 'large'])
+    )
     for _ in range(3)
 ]
 
 
 @pytest.mark.critical
 @pytest.mark.parametrize('title_obj, color, size', test_data)
-def test_post_a_obj(clear_obj, title_obj, color, size):  # Добавление нового объекта
+def test_post_a_obj(clear_obj, title_obj, color, size):  # Добавление объекта
     body = {
         "name": title_obj,
         "data": {
