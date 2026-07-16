@@ -15,8 +15,8 @@ class UpdateObj(BasePage):
             "data": {
                 "color": "test_color - UPD",
                 "size": "test_size - UPD"
-                }
             }
+        }
         self.response = requests.put(
             f"{self.URL}/{self.id}",
             json=body
@@ -28,7 +28,7 @@ class UpdateObj(BasePage):
         self.id = id_obj
         body = {
             "name": "Test object - UPD"
-            }
+        }
         self.response = requests.patch(
             f"{self.URL}/{self.id}",
             json=body
