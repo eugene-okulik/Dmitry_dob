@@ -1,4 +1,5 @@
 import pytest
+import requests
 
 from test_api_dmitry_dobrynin.src.api.read_obj import GetObj
 from test_api_dmitry_dobrynin.src.api.create_obj import PostObj
@@ -15,7 +16,7 @@ def read_objects():  # Для метода get
 def create_obj():  # для метода post
     obj = PostObj()
     yield obj
-    obj.clean_obj(obj.id)
+    requests.delete(f"{obj.URL}/{obj.id}")
 
 
 @pytest.fixture()
@@ -30,7 +31,7 @@ def create_obj_id():  # Cоздание и удаление тестовой с�
     response = obj.post_a_obj(data)
     id_obj = response.json()['id']
     yield id_obj
-    obj.clean_obj(id_obj)
+    requests.delete(f"{obj.URL}/{id_obj}")
 
 
 @pytest.fixture()  # для метода delete

@@ -1,10 +1,10 @@
 import requests
 import allure
 
-from test_api_dmitry_dobrynin.src.api.base_page import BasePage
+from test_api_dmitry_dobrynin.src.api.base_endpoint import BaseEndpoint
 
 
-class DeleteObj(BasePage):
+class DeleteObj(BaseEndpoint):
 
     @allure.step('Удаление объекта')
     def delete_a_obj(self, id_obj):

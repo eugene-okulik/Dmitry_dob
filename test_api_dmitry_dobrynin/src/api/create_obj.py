@@ -1,11 +1,11 @@
 import requests
 import allure
 
-from test_api_dmitry_dobrynin.src.api.base_page import BasePage
+from test_api_dmitry_dobrynin.src.api.base_endpoint import BaseEndpoint
 from test_api_dmitry_dobrynin.src.enums.global_enums import ErrorMessages
 
 
-class PostObj(BasePage):
+class PostObj(BaseEndpoint):
 
     title_obj = None
     color = None

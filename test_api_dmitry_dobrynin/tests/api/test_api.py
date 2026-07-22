@@ -14,6 +14,19 @@ TEST_DATA = [
     for _ in range(3)
 ]
 
+TEST_BODY_PUT = {
+            "name": "Test object - UPD",
+            "data": {
+                "color": "test_color - UPD",
+                "size": "test_size - UPD"
+            }
+        }
+
+name = {"name": "Test object - UPD"}
+
+data = {"color": "test_color - UPD",
+        "size": "test_size - UPD"}
+
 
 @allure.feature('Object')
 @pytest.mark.minor
@@ -27,8 +40,8 @@ def test_get_all_obj(read_objects):
 def test_get_one_obj(read_objects):
     read_objects.read_one_obj(1)
     read_objects.check_status_code_200()
-    read_objects.check_len_reponse_body()
-    read_objects.check_title_first_obj()
+    read_objects.check_len_reponse_body(3)
+    read_objects.check_title_first_obj('First object')
 
 
 @allure.feature('Object')
@@ -52,18 +65,19 @@ def test_post_obj(create_obj, data):
 @allure.feature('Object')
 @pytest.mark.medium
 def test_put_a_obj(update_new_obj, create_obj_id):
-    update_new_obj.put_obj(id_obj=create_obj_id)
+    update_new_obj.put_obj(TEST_BODY_PUT, id_obj=create_obj_id)
     update_new_obj.check_status_code_200()
-    update_new_obj.check_body_name()
+    update_new_obj.check_body_name(name['name'])
+    update_new_obj.check_body(data)
     update_new_obj.check_id()
 
 
 @allure.feature('Object')
 @pytest.mark.medium
 def test_patch_a_obj(update_new_obj, create_obj_id):
-    update_new_obj.patch_obj(id_obj=create_obj_id)
+    update_new_obj.patch_obj(name, id_obj=create_obj_id)
     update_new_obj.check_status_code_200()
-    update_new_obj.check_body_name()
+    update_new_obj.check_body_name(name['name'])
     update_new_obj.check_id()
 
 
