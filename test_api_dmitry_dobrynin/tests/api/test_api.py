@@ -15,12 +15,12 @@ TEST_DATA = [
 ]
 
 TEST_BODY_PUT = {
-            "name": "Test object - UPD",
-            "data": {
-                "color": "test_color - UPD",
-                "size": "test_size - UPD"
-            }
-        }
+    "name": "Test object - UPD",
+    "data": {
+        "color": "test_color - UPD",
+        "size": "test_size - UPD"
+    }
+}
 
 name = {"name": "Test object - UPD"}
 
